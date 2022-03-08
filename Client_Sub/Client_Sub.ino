@@ -22,6 +22,7 @@
 #include <PubSubClient.h>
 #include "Receive.h"
 #include "output.h"
+#include "Transmit.h"
 
 // Update these with values suitable for your network.
 
@@ -65,27 +66,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
+
+  //deserializeJson(doc, (const byte*)payload, length);
+  
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
 
-  /*
-   * Payload wird als 16bit festgelegt:
-   * 
-   * Bit 0-7 = Device
-   * Bit 8-16 = action an oder aus
-   * 
-   * 
-   */
-  switch (topic){
-    case "0":
-      scan();
-      break;
-    case "switch":
-      switchSockets();
-      break;
-    case default: break;
+  if(topic == "codeStart"){
+    scan();
   }
 
 }
