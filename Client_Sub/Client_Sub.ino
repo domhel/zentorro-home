@@ -61,19 +61,20 @@ void setup_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
+char* device[];
+char* state[];
+String code;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
 
-  //deserializeJson(doc, (const byte*)payload, length);
+  StaticJsonDocument<256> doc;
+  deserializeJson(doc, (const byte*)payload, length);
+  strlcpy(device, = doc["device"] | "default", sizeof()); 
+  strlcpy(state, = doc["state"] | "default", sizeof()); 
   
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
-
   if(topic == "codeStart"){
     scan();
   }
@@ -86,9 +87,9 @@ void toggle_output(byte* payload){
 }
 
 void scan(){
-    receive_setup();
-    
+    receive_setup();    
     receive_loop();
+    addToDatabase(device, state, code);
 }
 
 
