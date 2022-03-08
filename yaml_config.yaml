@@ -1,9 +1,16 @@
 switch:
 - platform: mqtt
-  command_topic: 433MHzBridge/pairing # möglicherweise muss das topic "Steckdose Flur" heißen.
-  payload_on: "/codeStart" 
+  command_topic: 433MHzBridge/pairing # möglicherweise muss das topic "Steckdose Flur, ON" heißen.
+  payload_on: "/codeStart: {device: "Steckdose Flur", state: "on"} 
   payload_off: "/codeStop"
-  name: "Steckose Flur" # muss für jedes neu hinzuzufügende Gerät im HA kurz geändert werden, außer es gibt eine Möglichkeit die yaml über ein Textfeld dynamisch zu ändern.
+  name: "Steckose Flur; ON" # muss für jedes neu hinzuzufügende Gerät im HA kurz geändert werden, außer es gibt eine Möglichkeit die yaml über ein Textfeld dynamisch zu ändern.
+
+switch:
+- platform: mqtt
+  command_topic: 433MHzBridge/pairing # möglicherweise muss das topic "Steckdose Flur, OFF" heißen.
+  payload_on: "/codeStart: {device: "Steckdose Flur", state: "off"} 
+  payload_off: "/codeStop"
+  name: "Steckose Flur; OFF"
 
 switch:
 - platform: mqtt
