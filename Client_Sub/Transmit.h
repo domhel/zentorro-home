@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 void transmit_setup();
-void transmit_loop();
+void transmit(String name, String state);
 void saveDatabase();
 void addToDatabase(String name, String state, String code);
 

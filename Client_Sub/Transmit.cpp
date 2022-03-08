@@ -55,16 +55,6 @@ void transmit_setup() {
   addToDatabase("Zweiter Eintrag", "off", B_Aus);
 }
 
-void transmit_loop() {
- /* Same switch as above, but tri-state code */ 
-  mySwitch.sendTriState(A_An);
-  Serial.println("ON");
-  delay(1000);  
-  mySwitch.sendTriState(A_Aus);
-  Serial.println("OFF");
-  delay(1000);
-  delay(20000);
-}
 
 void transmit(String name, String state){
    mySwitch.sendTriState(database[name][state][1]);

@@ -63,7 +63,8 @@ void setup_wifi() {
 }
 char* device[];
 char* state[];
-String code;
+unsigned long code;
+String hex_code;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -78,18 +79,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if(topic == "codeStart"){
     scan();
   }
+  if(topic == "control"){
+    transmit_setup();
+    transmit(device, state);
+  }
+ 
 
 }
 
-
-void toggle_output(byte* payload){
-  //an aus toggle
-}
 
 void scan(){
     receive_setup();    
-    receive_loop();
-    addToDatabase(device, state, code);
+    code = receive_loop();
+    hex_code = String(code, HEX);
+    addToDatabase(device, state, hex_code);
 }
 
 

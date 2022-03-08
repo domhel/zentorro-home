@@ -14,7 +14,7 @@ void output(unsigned long decimal, unsigned int length, unsigned int delay, unsi
   Serial.print("Bit) Binary: ");
   Serial.print( b );
   Serial.print(" Tri-State: ");
-  Serial.print( bin2tristate( b) );
+  Serial.print( bin2tristate( b) );  
   Serial.print(" PulseLength: ");
   Serial.print(delay);
   Serial.print(" microseconds");
@@ -29,6 +29,7 @@ void output(unsigned long decimal, unsigned int length, unsigned int delay, unsi
   Serial.println();
   Serial.println();
 }
+
 
 static const char* bin2tristate(const char* bin) {
   static char returnValue[50];
