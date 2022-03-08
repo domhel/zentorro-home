@@ -1,0 +1,13 @@
+switch:
+- platform: mqtt
+  command_topic: 433MHzBridge/pairing
+  payload_on: "/codeStart"
+  payload_off: "/codeStop"
+  name: "Steckose Flur"
+
+switch:
+- platform: mqtt
+  command_topic: 433MHzBridge/control
+  payload_on: "on"
+  payload_off: "off"
+  name: "Steckose Flur"
