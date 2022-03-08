@@ -1,5 +1,5 @@
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#ifndef TRANSMIT_H
+#define TRANSMIT_H
 #include <Arduino.h>
 
 void transmit_setup();

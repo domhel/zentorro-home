@@ -22,6 +22,7 @@
 #include <PubSubClient.h>
 #include "Receive.h"
 #include "output.h"
+#include <ArduinoJson.h>
 #include "Transmit.h"
 
 // Update these with values suitable for your network.
@@ -61,8 +62,8 @@ void setup_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
-char* device[];
-char* state[];
+char device[50] = "";
+char state[3] = "";
 unsigned long code;
 String hex_code;
 
@@ -73,8 +74,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   StaticJsonDocument<256> doc;
   deserializeJson(doc, (const byte*)payload, length);
-  strlcpy(device, = doc["device"] | "default", sizeof()); 
-  strlcpy(state, = doc["state"] | "default", sizeof()); 
+  strlcpy(device, doc["device"] | "default", sizeof(device)); 
+  strlcpy(state, doc["state"] | "default", sizeof(state)); 
+  
   
   if(topic == "codeStart"){
     scan();
@@ -90,7 +92,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void scan(){
     receive_setup();    
-    code = receive_loop();
+    code = receive_code();
     hex_code = String(code, HEX);
     addToDatabase(device, state, hex_code);
 }

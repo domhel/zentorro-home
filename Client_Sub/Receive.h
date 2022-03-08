@@ -3,6 +3,6 @@
 #include <Arduino.h>
 
 void receive_setup();
-void receive_loop();
+unsigned long receive_code();
 
 #endif
