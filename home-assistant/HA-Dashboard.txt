@@ -1,0 +1,18 @@
+title: Zentorro Home
+views:
+  - icon: mdi:remote
+    id: home
+    title: Home
+    cards:
+      - type: entities
+        title: Entertainment
+        show_header_toggle: false
+        entities:
+          - sensor.living_room
+          - input_select.livingroomharmony
+          - input_select.hdmiswitcher
+          - input_select.hdmiinput
+          - input_number.harmonyvolume
+          - sensor.total_tv_time
+          - script.tv_off
+
