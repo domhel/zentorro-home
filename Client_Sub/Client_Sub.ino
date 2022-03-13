@@ -25,11 +25,12 @@
 #include <ArduinoJson.h>
 #include "Transmit.h"
 
+
 // Update these with values suitable for your network.
 
 const char* ssid = "WLAN-Expert2 2,4GHz";
 const char* password = "CuuJWFN2Is";
-const char* mqtt_server = "broker.mqtt-dashboard.com";
+const char* mqtt_server = "broker.mqttdashboard.com";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -78,15 +79,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   strlcpy(state, doc["state"] | "default", sizeof(state)); 
   
   
-  if(topic == "codeStart"){
+  if(topic == "433MHzBridge/learn"){
     scan();
   }
   if(topic == "control"){
     transmit_setup();
     transmit(device, state);
   }
- 
-
 }
 
 

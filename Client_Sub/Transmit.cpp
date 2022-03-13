@@ -4,7 +4,7 @@
 #include "Transmit.h"
 
 
-RCSwitch mySwitch = RCSwitch();
+RCSwitch mySwitch2 = RCSwitch();
 
 #define A_An "000000FFFF0F"
 #define B_An "00000F0FFF0F"
@@ -19,7 +19,7 @@ RCSwitch mySwitch = RCSwitch();
 #define pulseLength 324
 #define protocol 1
 #define repeat 3
-#define transmitterPin D3
+#define transmitterPin D2
 
 #define DB_PATH "/database.json"
 
@@ -30,16 +30,16 @@ bool isRecordingCodes = false;
 void transmit_setup() {
 
   // Transmitter-Pin on NodeMCU
-  mySwitch.enableTransmit(transmitterPin);
+  mySwitch2.enableTransmit(transmitterPin);
   
   // Optional set protocol (default is 1, will work for most outlets)
-  mySwitch.setProtocol(protocol);
+  mySwitch2.setProtocol(protocol);
 
   // Optional set pulse length.
-  mySwitch.setPulseLength(pulseLength);
+  mySwitch2.setPulseLength(pulseLength);
   
   // Optional set number of transmission repetitions.
-  mySwitch.setRepeatTransmit(3);
+  mySwitch2.setRepeatTransmit(3);
 
   String db_string;
   if (fileSystem.openFromFile(DB_PATH, db_string)) {
@@ -57,7 +57,7 @@ void transmit_setup() {
 
 
 void transmit(String name, String state){
-   mySwitch.sendTriState(database[name][state][1]);
+   mySwitch2.sendTriState(database[name][state][1]);
 }
 
 
