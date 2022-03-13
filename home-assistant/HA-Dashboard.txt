@@ -5,14 +5,22 @@ views:
     title: Home
     cards:
       - type: entities
-        title: Entertainment
-        show_header_toggle: false
         entities:
-          - sensor.living_room
-          - input_select.livingroomharmony
-          - input_select.hdmiswitcher
-          - input_select.hdmiinput
-          - input_number.harmonyvolume
-          - sensor.total_tv_time
-          - script.tv_off
-
+          - entity: input_text.zentorro_new_device_name
+          - entity: input_text.zentorro_new_device_state
+          - entity: button.start_learning
+        title: Add 433MHz Device
+      - type: entities
+        entities:
+          - entity: input_select.zentorro_control_device
+          - entity: input_select.zentorro_control_state
+          - entity: button.set_state
+        title: 433MHz Devices
+        state_color: false
+      - type: entities
+        entities:
+          - entity: input_text.zentorro_control_device_name
+          - entity: input_text.zentorro_control_device_state
+          - entity: button.set_state_2
+        title: 433MHz Manual Control
+        show_header_toggle: true
