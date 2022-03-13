@@ -27,6 +27,18 @@ DynamicJsonDocument database(8192);
 eSPIFFS fileSystem;
 bool isRecordingCodes = false;
 
+void read_database() {
+  String db_string;
+  if (fileSystem.openFromFile(DB_PATH, db_string)) {
+    Serial.print("Successfully read file and parsed data: ");
+    deserializeJson(database, db_string);
+    Serial.println(db_string);
+  } else {
+    // DB is new
+    Serial.println("Created a new database.");
+  }
+}
+
 void transmit_setup() {
 
   // Transmitter-Pin on NodeMCU
@@ -41,18 +53,6 @@ void transmit_setup() {
   // Optional set number of transmission repetitions.
   mySwitch2.setRepeatTransmit(3);
 
-  String db_string;
-  if (fileSystem.openFromFile(DB_PATH, db_string)) {
-    Serial.print("Successfully read file and parsed data: ");
-    deserializeJson(database, db_string);
-    Serial.println(db_string);
-    database["Flur"]["off"][0] = A_Aus;
-    saveDatabase();
-  } else {
-    // DB is new
-  }
-
-  addToDatabase("Zweiter Eintrag", "off", B_Aus);
 }
 
 
