@@ -77,6 +77,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
   deserializeJson(doc, (const byte*)payload, length);
   strlcpy(device, doc["device"] | "default", sizeof(device)); 
   strlcpy(state, doc["state"] | "default", sizeof(state)); 
+
+  Serial.println(device);
+  Serial.println(state);
   
   
   if(topic == "433MHzBridge/learn"){
@@ -93,6 +96,10 @@ void scan(){
     receive_setup();    
     code = receive_code();
     hex_code = String(code, HEX);
+    Serial.println(device);
+    Serial.println(state);
+    Serial.println(code);
+    Serial.println(hex_code);  
     addToDatabase(device, state, hex_code);
 }
 
@@ -109,9 +116,10 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish("outTopic", "hello world");
+      client.publish("433MHzBridge/database", "hello world");
       // ... and resubscribe
-      client.subscribe("inTopic");
+      client.subscribe("433MHzBridge/learn");
+      //client.subscribe("433MHzBridge/control");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
