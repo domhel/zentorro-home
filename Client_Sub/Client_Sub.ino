@@ -64,8 +64,8 @@ void setup_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
-char device[50] = "";
-char state[3] = "";
+char device[64] = "";
+char state[64] = "";
 String hex_code;
 String topic_String;
 
@@ -87,14 +87,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   if(topic_String == "433MHzBridge/control"){
     Serial.println("Test");
-    transmit_setup();
     transmit(device, state);
   }
 }
 
 
-void scan(){
-    receive_setup();  
+void scan(){ 
     code = receive_code();
     hex_code = String(code, HEX);
     Serial.println(device);
@@ -138,8 +136,11 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
+  transmit_setup();
+  receive_setup(); 
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
+  
 }
 
 void loop() {
