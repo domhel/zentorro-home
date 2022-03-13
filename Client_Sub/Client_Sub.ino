@@ -24,6 +24,7 @@
 #include "output.h"
 #include <ArduinoJson.h>
 #include "Transmit.h"
+#include "database.h"
 
 
 // Update these with values suitable for your network.
@@ -136,6 +137,7 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
+  initDatabase();
   transmit_setup();
   receive_setup(); 
   client.setServer(mqtt_server, 1883);
