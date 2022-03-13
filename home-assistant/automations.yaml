@@ -1,0 +1,15 @@
+- id: '1647008246424'
+  alias: ButtonTest
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: button.steckose_flur_on
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: 433MHzBridge/pairing
+      retain: true
+      payload: '{device: "{{states(''input_text.text1'')}}", state: "on"}'
+  mode: single
+

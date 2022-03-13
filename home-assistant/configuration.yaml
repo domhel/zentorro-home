@@ -1,0 +1,43 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+button:
+- platform: mqtt
+  command_topic: 433MHzBridge/pairing
+  # command_topic: gen1/control/togglePause
+  # payload_on: '/codeStart: {device: "Steckdose Flur", state: "on"}'
+  # payload_off: "/codeStop"
+  name: "Steckose Flur; ON"
+
+input_text:
+  text1:
+    name: Text 1
+    mode: text
+
+switch:
+- platform: mqtt
+  command_topic: 433MHzBridge/pairing
+  payload_on: '{device: "{{states.input_text.text1}}", state: "on"}'
+  payload_off: ''
+
+  payload_available: ''
+  name: "Steckose Flur; ON"
+
+input_select:
+  who_cooks:
+    name: Who cooks today
+    options:
+      - Paulus
+      - Nick
+    initial: Nick
+    icon: mdi:panda
