@@ -119,7 +119,8 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish("433MHzBridge/database", "hello world");
+      String databaseString = serializeJson(database, databaseString);
+      client.publish("433MHzBridge/database", databaseString);
       // ... and resubscribe
       client.subscribe("433MHzBridge/learn");
       client.subscribe("433MHzBridge/control");
