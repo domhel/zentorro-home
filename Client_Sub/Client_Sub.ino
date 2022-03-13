@@ -94,14 +94,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 void scan(){
-    /*receive_setup();  
+    receive_setup();  
     code = receive_code();
     hex_code = String(code, HEX);
     Serial.println(device);
     Serial.println(state);
     Serial.println(code);
     Serial.println(hex_code);
-    */  
+    
     addToDatabase("Steckdose1", "on", "000000FFFF0F");
     addToDatabase("Steckdose1", "off", "000000FFFFF0");
     saveDatabase();
