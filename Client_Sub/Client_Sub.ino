@@ -86,7 +86,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if(topic_String == "433MHzBridge/learn"){
     scan();
   }
-  if(topic_String == "433MHzBridge/control"){
+  else if(topic_String == "433MHzBridge/control"){
     Serial.println("Test");
     transmit(device, state);
   }
@@ -94,16 +94,26 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 void scan(){ 
+  // Dominik: muss nicht in einer Loop abgefragt werden, bis ein Code da ist?
+  // ausserdem muss der gleiche Code 3x received werden
+  uint8_t sameCodeInRowCount = 0;
+  unsigned long previousCode = 0;
+  while (sameCodeInRowCount < 3) {
     code = receive_code();
-    hex_code = String(code, HEX);
-    Serial.println(device);
-    Serial.println(state);
-    Serial.println(code);
-    Serial.println(hex_code);
-    
-    addToDatabase("Steckdose1", "on", "000000FFFF0F");
-    addToDatabase("Steckdose1", "off", "000000FFFFF0");
-    saveDatabase();
+    if (code != 0 && code == previousCode) {
+      codeStr = String(code, HEX);
+      Serial.println("Got code " + codeStr + " for " + device + " and state " + state);
+      ++sameCodeInRowCount;
+    } else {
+      previousCode = code;
+      sameCodeInRowCount = 0;
+    }
+  }
+
+  addToDatabase(String(device), String(state), String(code));
+  /* addToDatabase("Steckdose1", "on", "000000FFFF0F"); */
+  /* addToDatabase("Steckdose1", "off", "000000FFFFF0"); */
+  saveDatabase();
 }
 
 
