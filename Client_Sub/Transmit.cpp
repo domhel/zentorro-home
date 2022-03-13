@@ -19,7 +19,7 @@ RCSwitch mySwitch2 = RCSwitch();
 #define pulseLength 324
 #define protocol 1
 #define repeat 3
-#define transmitterPin D2
+#define transmitterPin D3
 
 #define DB_PATH "/database.json"
 

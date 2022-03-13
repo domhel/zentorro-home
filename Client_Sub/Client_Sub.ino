@@ -28,9 +28,10 @@
 
 // Update these with values suitable for your network.
 
-const char* ssid = "WLAN-Expert2 2,4GHz";
-const char* password = "CuuJWFN2Is";
+const char* ssid = "FRITZ!Box 7530 SC";
+const char* password = "01178381469567963357";
 const char* mqtt_server = "broker.mqttdashboard.com";
+unsigned long code = 0;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -65,8 +66,8 @@ void setup_wifi() {
 }
 char device[50] = "";
 char state[3] = "";
-unsigned long code;
 String hex_code;
+String topic_String;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -80,12 +81,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   Serial.println(device);
   Serial.println(state);
-  
-  
-  if(topic == "433MHzBridge/learn"){
+  topic_String = String(topic);
+  if(topic_String == "433MHzBridge/learn"){
     scan();
   }
-  if(topic == "control"){
+  if(topic_String == "433MHzBridge/control"){
+    Serial.println("Test");
     transmit_setup();
     transmit(device, state);
   }
@@ -93,14 +94,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 void scan(){
-    receive_setup();    
+    /*receive_setup();  
     code = receive_code();
     hex_code = String(code, HEX);
     Serial.println(device);
     Serial.println(state);
     Serial.println(code);
-    Serial.println(hex_code);  
-    addToDatabase(device, state, hex_code);
+    Serial.println(hex_code);
+    */  
+    addToDatabase("Steckdose1", "on", "000000FFFF0F");
+    addToDatabase("Steckdose1", "off", "000000FFFFF0");
+    saveDatabase();
 }
 
 
@@ -119,7 +123,7 @@ void reconnect() {
       client.publish("433MHzBridge/database", "hello world");
       // ... and resubscribe
       client.subscribe("433MHzBridge/learn");
-      //client.subscribe("433MHzBridge/control");
+      client.subscribe("433MHzBridge/control");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
