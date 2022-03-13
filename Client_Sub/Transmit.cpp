@@ -57,6 +57,16 @@ void transmit_setup() {
 
 
 void transmit(String name, String state){
+  if (!database.containsKey(name)) {
+    Serial.print("Device name not in database: ");
+    Serial.println(name);
+    return;
+  }
+  if (!database[name].containsKey(state)) {
+    Serial.print("State not in database: ");
+    Serial.println(state);
+    return;
+  }
    mySwitch2.sendTriState(database[name][state][1]);
 }
 
