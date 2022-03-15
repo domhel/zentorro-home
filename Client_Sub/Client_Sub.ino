@@ -101,7 +101,7 @@ void scan(){
   while (sameCodeInRowCount < 3) {
     code = receive_code();
     if (code != 0 && code == previousCode) {
-      codeStr = String(code, HEX);
+      String codeStr = String(code, HEX);
       Serial.println("Got code " + codeStr + " for " + device + " and state " + state);
       ++sameCodeInRowCount;
     } else {
@@ -129,8 +129,9 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      String databaseString = serializeJson(database, databaseString);
-      client.publish("433MHzBridge/database", databaseString);
+      String databaseString;
+      serializeJson(database, databaseString);
+      client.publish("433MHzBridge/database", databaseString.c_str());
       // ... and resubscribe
       client.subscribe("433MHzBridge/learn");
       client.subscribe("433MHzBridge/control");

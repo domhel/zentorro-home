@@ -14,4 +14,5 @@ unsigned long receive_code() {
     mySwitch.resetAvailable();
     return mySwitch.getReceivedValue();
   }
+  return 0;
 }

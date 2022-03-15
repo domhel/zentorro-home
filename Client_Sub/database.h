@@ -7,7 +7,7 @@
 
 #define DB_PATH "/database.json"
 
-extern DynamicJsonDocument database(8192);
+extern DynamicJsonDocument database;
 extern eSPIFFS fileSystem;
 
 void initDatabase();

@@ -1,4 +1,7 @@
-#include "database.h";
+#include "database.h"
+
+DynamicJsonDocument database = DynamicJsonDocument(8192);
+eSPIFFS fileSystem = eSPIFFS();
 
 void initDatabase() {
   String db_string;
