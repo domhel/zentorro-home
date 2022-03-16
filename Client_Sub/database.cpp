@@ -48,5 +48,6 @@ void addToDatabase(String name, String state, String code) {
 }
 
 void clearDatabase(){
-  
+  database = DynamicJsonDocument(8192);
+  saveDatabase();
 }

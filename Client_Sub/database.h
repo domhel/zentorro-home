@@ -13,6 +13,7 @@ extern eSPIFFS fileSystem;
 void initDatabase();
 void saveDatabase();
 void addToDatabase(String name, String state, String code);
+void clearDatabase();
 
 
 #endif

@@ -84,11 +84,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(state);
   topic_String = String(topic);
   if(topic_String == "433MHzBridge/learn"){
+    client.publish("433MHzBridge/status", "ON");
     test = 1;
   }
   else if(topic_String == "433MHzBridge/control"){
-    Serial.println("Test");
     transmit(device, state);
+  }
+  else if(topic_String == "433MHzBridge/clear"){
+    clearDatabase();
+    Serial.println("clear");
   }
 }
 
@@ -115,6 +119,7 @@ void scan(){
     }
     else if(sameCodeInRowCount >= 3){
       test = 0;
+      client.publish("433MHzBridge/status", "OFF");
       sameCodeInRowCount = 0;
       previousCode = String("");
       addToDatabase(String(device), String(state), String(hex_code));
@@ -143,6 +148,7 @@ void reconnect() {
       // ... and resubscribe
       client.subscribe("433MHzBridge/learn");
       client.subscribe("433MHzBridge/control");
+      client.subscribe("433MHzBridge/clear");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -173,14 +179,5 @@ void loop() {
   client.loop();
   if(test){
     scan(); 
-  }
-  unsigned long now = millis();
-  if (now - lastMsg > 2000) {
-    lastMsg = now;
-    ++value;
-    snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
-    Serial.print("Publish message: ");
-    Serial.println(msg);
-    client.publish("outTopic", msg);
   }
 }
