@@ -50,6 +50,14 @@ void transmit(String name, String state){
     Serial.println(state);
     return;
   }
+  if (database[name][state][0] == 1) {
+
+    Serial.print("State not in database: ");
+
+    Serial.println(state);
+
+    return;
+
+  }
    mySwitch2.sendTriState(database[name][state][1]);
 }
-

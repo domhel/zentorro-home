@@ -27,6 +27,8 @@ void saveDatabase() {
   }
 }
 
+
+
 void addToDatabase(String name, String state, String code) {
   if (state != "off" && state != "on") return;
 
