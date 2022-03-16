@@ -69,6 +69,7 @@ char device[64] = "";
 char state[64] = "";
 String hex_code;
 String topic_String;
+int test = 0;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -84,7 +85,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(state);
   topic_String = String(topic);
   if(topic_String == "433MHzBridge/learn"){
-    scan();
+    test = 1;
   }
   else if(topic_String == "433MHzBridge/control"){
     Serial.println("Test");
@@ -92,28 +93,33 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-
+uint8_t sameCodeInRowCount = 0;
+  unsigned long previousCode = 0;
 void scan(){ 
   // Dominik: muss nicht in einer Loop abgefragt werden, bis ein Code da ist?
   // ausserdem muss der gleiche Code 3x received werden
-  uint8_t sameCodeInRowCount = 0;
-  unsigned long previousCode = 0;
-  while (sameCodeInRowCount < 3) {
+  
+   if(sameCodeInRowCount < 3) {
     code = receive_code();
     if (code != 0 && code == previousCode) {
-      String codeStr = String(code, HEX);
-      Serial.println("Got code " + codeStr + " for " + device + " and state " + state);
+      hex_code = String(code, HEX);
+      Serial.println("Got code " + String(code) + " for " + device + " and state " + state);
       ++sameCodeInRowCount;
     } else {
       previousCode = code;
       sameCodeInRowCount = 0;
     }
-  }
-
-  addToDatabase(String(device), String(state), String(code));
+    }
+    else if(sameCodeInRowCount >= 3){
+      test = 0;
+      sameCodeInRowCount = 0;
+      previousCode = 0;
+      addToDatabase(String(device), String(state), String(hex_code));
+      saveDatabase();
+    }
+  
   /* addToDatabase("Steckdose1", "on", "000000FFFF0F"); */
   /* addToDatabase("Steckdose1", "off", "000000FFFFF0"); */
-  saveDatabase();
 }
 
 
@@ -163,7 +169,9 @@ void loop() {
     reconnect();
   }
   client.loop();
-
+  if(test){
+    scan(); 
+  }
   unsigned long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
