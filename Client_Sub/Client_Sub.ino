@@ -32,7 +32,6 @@
 const char* ssid = "FRITZ!Box 7530 SC";
 const char* password = "01178381469567963357";
 const char* mqtt_server = "broker.mqttdashboard.com";
-unsigned long code = 0;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -74,7 +73,7 @@ int test = 0;
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
-  Serial.print("] ");
+  Serial.println("] ");
 
   StaticJsonDocument<256> doc;
   deserializeJson(doc, (const byte*)payload, length);
@@ -94,26 +93,30 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 uint8_t sameCodeInRowCount = 0;
-  unsigned long previousCode = 0;
+String previousCode;
 void scan(){ 
   // Dominik: muss nicht in einer Loop abgefragt werden, bis ein Code da ist?
   // ausserdem muss der gleiche Code 3x received werden
   
    if(sameCodeInRowCount < 3) {
-    code = receive_code();
-    if (code != 0 && code == previousCode) {
-      hex_code = String(code, HEX);
-      Serial.println("Got code " + String(code) + " for " + device + " and state " + state);
+    hex_code = receive_code();
+    if(hex_code == ""){
+      return;
+    }
+     Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
+    if (hex_code == previousCode || sameCodeInRowCount == 0) {
+      Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
       ++sameCodeInRowCount;
+      Serial.println(sameCodeInRowCount);
     } else {
-      previousCode = code;
+      previousCode = hex_code;
       sameCodeInRowCount = 0;
     }
     }
     else if(sameCodeInRowCount >= 3){
       test = 0;
       sameCodeInRowCount = 0;
-      previousCode = 0;
+      previousCode = String("");
       addToDatabase(String(device), String(state), String(hex_code));
       saveDatabase();
     }
@@ -121,7 +124,6 @@ void scan(){
   /* addToDatabase("Steckdose1", "on", "000000FFFF0F"); */
   /* addToDatabase("Steckdose1", "off", "000000FFFFF0"); */
 }
-
 
 
 void reconnect() {
@@ -155,7 +157,7 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
-  initDatabase();
+  //initDatabase();
   transmit_setup();
   receive_setup(); 
   client.setServer(mqtt_server, 1883);

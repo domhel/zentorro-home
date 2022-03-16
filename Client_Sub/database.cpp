@@ -6,7 +6,7 @@ eSPIFFS fileSystem = eSPIFFS();
 void initDatabase() {
   String db_string;
   if (fileSystem.openFromFile(DB_PATH, db_string)) {
-    Serial.print("Successfully read file and parsed data: ");
+    Serial.println("Successfully read file and parsed data: ");
     deserializeJson(database, db_string);
     Serial.println(db_string);
   } else {
@@ -18,7 +18,7 @@ void initDatabase() {
 void saveDatabase() {
   String db_string;
   serializeJson(database, db_string);
-  Serial.print("Saving database: ");
+  Serial.println("Saving database: ");
   Serial.println(db_string);
   if (fileSystem.saveToFile(DB_PATH, db_string)) {
       Serial.println("Saving complete.");
@@ -37,10 +37,16 @@ void addToDatabase(String name, String state, String code) {
     database[name][state][1] = code;
     database[name][state][0] = 2;
     serializeJson(database, Serial); // TODO: remove in production
+    Serial.println();
     return;
   }
 
   database[name][state][database[name][state][0]] = code;
   database[name][state][0] = database[name][state][0].as<int32_t>() + 1;
   serializeJson(database, Serial);
+  Serial.println();
+}
+
+void clearDatabase(){
+  
 }

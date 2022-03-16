@@ -4,6 +4,6 @@
 
 
 void receive_setup();
-unsigned long receive_code();
+String receive_code();
 
 #endif
