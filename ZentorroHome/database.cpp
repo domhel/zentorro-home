@@ -46,10 +46,12 @@ void addToDatabase(String name, String state, String code) {
   // Name and state are already in the database
   // Check if the code is already in the database
   int index = database[name][state][0];
-  String previousCode = database[name][state][index];
-  if (previousCode == code) {
-    // Code is already in the database
-    return;
+  for (int i = 1; i < index - 1; ++i) {
+    if (database[name][state][i] == code) {
+      // Code is already in the database
+      Serial.println("Code already exists. Skipping it ...");
+      return;
+    }
   }
   // Code is not in the database
   // Add code to database
