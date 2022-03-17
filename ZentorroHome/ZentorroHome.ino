@@ -14,14 +14,8 @@ const char* mqttServerUrl = "broker.mqttdashboard.com";
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-unsigned long lastMsg = 0;
-unsigned long decimal_device;
-#define MSG_BUFFER_SIZE	(50)
-char msg[MSG_BUFFER_SIZE];
-int value = 0;
 
 void wifiSetup() {
-
   delay(10);
   Serial.println();
   Serial.print("Connecting to ");
@@ -40,11 +34,10 @@ void wifiSetup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
+
 char device[64] = "";
 char state[64] = "";
-String hexCode;
-String topicString;
-int test = 0;
+bool codeScanningEnabled = 0;
 
 void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -58,10 +51,10 @@ void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
 
   Serial.println(device);
   Serial.println(state);
-  topicString = String(topic);
+  String topicString = String(topic);
   if(topicString == "433MHzBridge/learn"){
     mqttClient.publish("433MHzBridge/status", "ON");
-    test = 1;
+    codeScanningEnabled = 1;
   }
   else if(topicString == "433MHzBridge/control"){
     transmit(device, state);
@@ -72,17 +65,17 @@ void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-uint8_t sameCodeInRowCount = 0;
-String previousCode;
 void scan(){ 
+  static uint8_t sameCodeInRowCount = 0;
+  static String previousCode = "";
+  static String hexCode = "";
   if(sameCodeInRowCount < 3) {
     hexCode = receiveCode();
     if(hexCode == ""){
       return;
     }
-      Serial.println("Got code " + hexCode + " for " + device + " and state " + state);
+    Serial.println("Got code " + hexCode + " for " + device + " and state " + state);
     if (hexCode == previousCode || sameCodeInRowCount == 0) {
-      Serial.println("Got code " + hexCode + " for " + device + " and state " + state);
       ++sameCodeInRowCount;
       Serial.println(sameCodeInRowCount);
     } else {
@@ -91,11 +84,11 @@ void scan(){
     }
   }
   else if(sameCodeInRowCount >= 3){
-    test = 0;
+    codeScanningEnabled = 0;
     mqttClient.publish("433MHzBridge/status", "OFF");
     sameCodeInRowCount = 0;
     previousCode = String("");
-    addToDatabase(String(device), String(state), String(hexCode));
+    addToDatabase(String(device), String(state), hexCode);
     saveDatabase();
   }
 }
@@ -147,7 +140,7 @@ void loop() {
     reconnectMqtt();
   }
   mqttClient.loop();
-  if(test){
+  if(codeScanningEnabled){
     scan(); 
   }
 }

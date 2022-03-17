@@ -1,5 +1,18 @@
 {
     "files.associations": {
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "*.rh": "cpp",
+        "atomic": "cpp",
+        "functional": "cpp",
+        "istream": "cpp",
+        "memory": "cpp",
+        "ostream": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xlocale": "cpp",
+        "xlocnum": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
     }
 }
