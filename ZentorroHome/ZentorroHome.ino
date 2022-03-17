@@ -123,9 +123,9 @@ void reconnectMqtt() {
 
 void setup() {
   Serial.begin(115200);
-  randomSeed(micros());
-  wifiSetup();
   databaseSetup();
+  randomSeed(micros()); // reading the database might take a random amount of time
+  wifiSetup();
   transmitSetup();
   receiveSetup(); 
   mqttClient.setServer(mqttServerUrl, 1883);
