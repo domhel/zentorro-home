@@ -4,11 +4,11 @@ DynamicJsonDocument database = DynamicJsonDocument(8192);
 eSPIFFS fileSystem = eSPIFFS();
 
 void databaseSetup() {
-  String db_string;
-  if (fileSystem.openFromFile(DB_PATH, db_string)) {
+  String dbString;
+  if (fileSystem.openFromFile(DB_PATH, dbString)) {
     Serial.println("Successfully read file and parsed data: ");
-    deserializeJson(database, db_string);
-    Serial.println(db_string);
+    deserializeJson(database, dbString);
+    Serial.println(dbString);
   } else {
     // DB is new
     Serial.println("Created a new database.");
@@ -16,11 +16,11 @@ void databaseSetup() {
 }
 
 void saveDatabase() {
-  String db_string;
-  serializeJson(database, db_string);
+  String dbString;
+  serializeJson(database, dbString);
   Serial.println("Saving database: ");
-  Serial.println(db_string);
-  if (fileSystem.saveToFile(DB_PATH, db_string)) {
+  Serial.println(dbString);
+  if (fileSystem.saveToFile(DB_PATH, dbString)) {
       Serial.println("Saving complete.");
   } else {
     Serial.println("Error saving database.");
@@ -50,6 +50,6 @@ void addToDatabase(String name, String state, String code) {
 }
 
 void clearDatabase(){
-  database = DynamicJsonDocument(8192);
+  database.clear();
   saveDatabase();
 }

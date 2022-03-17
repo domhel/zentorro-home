@@ -42,8 +42,8 @@ void wifiSetup() {
 }
 char device[64] = "";
 char state[64] = "";
-String hex_code;
-String topic_String;
+String hexCode;
+String topicString;
 int test = 0;
 
 void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
@@ -58,15 +58,15 @@ void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
 
   Serial.println(device);
   Serial.println(state);
-  topic_String = String(topic);
-  if(topic_String == "433MHzBridge/learn"){
+  topicString = String(topic);
+  if(topicString == "433MHzBridge/learn"){
     mqttClient.publish("433MHzBridge/status", "ON");
     test = 1;
   }
-  else if(topic_String == "433MHzBridge/control"){
+  else if(topicString == "433MHzBridge/control"){
     transmit(device, state);
   }
-  else if(topic_String == "433MHzBridge/clear"){
+  else if(topicString == "433MHzBridge/clear"){
     clearDatabase();
     Serial.println("clear");
   }
@@ -76,17 +76,17 @@ uint8_t sameCodeInRowCount = 0;
 String previousCode;
 void scan(){ 
   if(sameCodeInRowCount < 3) {
-    hex_code = receiveCode();
-    if(hex_code == ""){
+    hexCode = receiveCode();
+    if(hexCode == ""){
       return;
     }
-      Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
-    if (hex_code == previousCode || sameCodeInRowCount == 0) {
-      Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
+      Serial.println("Got code " + hexCode + " for " + device + " and state " + state);
+    if (hexCode == previousCode || sameCodeInRowCount == 0) {
+      Serial.println("Got code " + hexCode + " for " + device + " and state " + state);
       ++sameCodeInRowCount;
       Serial.println(sameCodeInRowCount);
     } else {
-      previousCode = hex_code;
+      previousCode = hexCode;
       sameCodeInRowCount = 0;
     }
   }
@@ -95,7 +95,7 @@ void scan(){
     mqttClient.publish("433MHzBridge/status", "OFF");
     sameCodeInRowCount = 0;
     previousCode = String("");
-    addToDatabase(String(device), String(state), String(hex_code));
+    addToDatabase(String(device), String(state), String(hexCode));
     saveDatabase();
   }
 }
