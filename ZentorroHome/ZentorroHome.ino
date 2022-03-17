@@ -10,10 +10,10 @@
 // Update these with values suitable for your network.
 const char* ssid = "FRITZ!Box 7530 SC";
 const char* password = "01178381469567963357";
-const char* mqtt_server = "broker.mqttdashboard.com";
+const char* mqttUrl = "broker.mqttdashboard.com";
 
 WiFiClient espClient;
-PubSubClient client(espClient);
+PubSubClient mqttClient(espClient);
 unsigned long lastMsg = 0;
 unsigned long decimal_device;
 #define MSG_BUFFER_SIZE	(50)
@@ -46,7 +46,7 @@ String hex_code;
 String topic_String;
 int test = 0;
 
-void callback(char* topic, byte* payload, unsigned int length) {
+void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.println("] ");
@@ -60,7 +60,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(state);
   topic_String = String(topic);
   if(topic_String == "433MHzBridge/learn"){
-    client.publish("433MHzBridge/status", "ON");
+    mqttClient.publish("433MHzBridge/status", "ON");
     test = 1;
   }
   else if(topic_String == "433MHzBridge/control"){
@@ -95,7 +95,7 @@ void scan(){
     }
     else if(sameCodeInRowCount >= 3){
       test = 0;
-      client.publish("433MHzBridge/status", "OFF");
+      mqttClient.publish("433MHzBridge/status", "OFF");
       sameCodeInRowCount = 0;
       previousCode = String("");
       addToDatabase(String(device), String(state), String(hex_code));
@@ -109,25 +109,25 @@ void scan(){
 
 void reconnect() {
   // Loop until we're reconnected
-  while (!client.connected()) {
+  while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
     String clientId = "ESP8266Client-";
     clientId += String(random(0xffff), HEX);
     // Attempt to connect
-    if (client.connect(clientId.c_str())) {
+    if (mqttClient.connect(clientId.c_str())) {
       Serial.println("connected");
       // Once connected, publish an announcement...
       String databaseString;
       serializeJson(database, databaseString);
-      client.publish("433MHzBridge/database", databaseString.c_str());
+      mqttClient.publish("433MHzBridge/database", databaseString.c_str());
       // ... and resubscribe
-      client.subscribe("433MHzBridge/learn");
-      client.subscribe("433MHzBridge/control");
-      client.subscribe("433MHzBridge/clear");
+      mqttClient.subscribe("433MHzBridge/learn");
+      mqttClient.subscribe("433MHzBridge/control");
+      mqttClient.subscribe("433MHzBridge/clear");
     } else {
       Serial.print("failed, rc=");
-      Serial.print(client.state());
+      Serial.print(mqttClient.state());
       Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
@@ -143,17 +143,17 @@ void setup() {
   //initDatabase();
   transmit_setup();
   receive_setup(); 
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+  mqttClient.setServer(mqttUrl, 1883);
+  mqttClient.setCallback(onMqttMessageReceived);
   
 }
 
 void loop() {
 
-  if (!client.connected()) {
+  if (!mqttClient.connected()) {
     reconnect();
   }
-  client.loop();
+  mqttClient.loop();
   if(test){
     scan(); 
   }
