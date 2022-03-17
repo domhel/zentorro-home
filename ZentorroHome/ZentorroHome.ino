@@ -6,7 +6,6 @@
 #include "Transmit.h"
 #include "database.h"
 
-
 // Update these with values suitable for your network.
 const char* ssid = "FRITZ!Box 7530 SC";
 const char* password = "01178381469567963357";
@@ -65,7 +64,7 @@ void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-void scan(){ 
+void scanRCCode(){ 
   static uint8_t sameCodeInRowCount = 0;
   static String previousCode = "";
   static String hexCode = "";
@@ -131,16 +130,14 @@ void setup() {
   receiveSetup(); 
   mqttClient.setServer(mqttServerUrl, 1883);
   mqttClient.setCallback(onMqttMessageReceived);
-  
 }
 
 void loop() {
-
   if (!mqttClient.connected()) {
     reconnectMqtt();
   }
   mqttClient.loop();
   if(codeScanningEnabled){
-    scan(); 
+    scanRCCode(); 
   }
 }
