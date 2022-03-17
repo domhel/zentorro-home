@@ -8,3 +8,4 @@ Software to connect 433MHz-controllable Smart Home devices to Home Assistant
 - ArduinoJSON
 - RCSwitch
 - ESPMqttClient
+- Effortless-SPIFFS
