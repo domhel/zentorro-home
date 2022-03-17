@@ -4,8 +4,8 @@
 
 RCSwitch mySwitch = RCSwitch();
 
-void receive_setup() { mySwitch.enableReceive(D2); }
-String receive_code() {
+void receiveSetup() { mySwitch.enableReceive(D2); }
+String receiveCode() {
   if(mySwitch.available()) {
     const char* b = dec2binWzerofill(mySwitch.getReceivedValue(), mySwitch.getReceivedBitlength());
     const char* hex_code = bin2tristate( b);

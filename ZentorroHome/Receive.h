@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 
-void receive_setup();
-String receive_code();
+void receiveSetup();
+String receiveCode();
 
 #endif

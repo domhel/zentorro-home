@@ -10,7 +10,7 @@
 // Update these with values suitable for your network.
 const char* ssid = "FRITZ!Box 7530 SC";
 const char* password = "01178381469567963357";
-const char* mqttUrl = "broker.mqttdashboard.com";
+const char* mqttServerUrl = "broker.mqttdashboard.com";
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -20,7 +20,7 @@ unsigned long decimal_device;
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
-void setup_wifi() {
+void wifiSetup() {
 
   delay(10);
   Serial.println();
@@ -75,15 +75,12 @@ void onMqttMessageReceived(char* topic, byte* payload, unsigned int length) {
 uint8_t sameCodeInRowCount = 0;
 String previousCode;
 void scan(){ 
-  // Dominik: muss nicht in einer Loop abgefragt werden, bis ein Code da ist?
-  // ausserdem muss der gleiche Code 3x received werden
-  
-   if(sameCodeInRowCount < 3) {
-    hex_code = receive_code();
+  if(sameCodeInRowCount < 3) {
+    hex_code = receiveCode();
     if(hex_code == ""){
       return;
     }
-     Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
+      Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
     if (hex_code == previousCode || sameCodeInRowCount == 0) {
       Serial.println("Got code " + hex_code + " for " + device + " and state " + state);
       ++sameCodeInRowCount;
@@ -92,22 +89,19 @@ void scan(){
       previousCode = hex_code;
       sameCodeInRowCount = 0;
     }
-    }
-    else if(sameCodeInRowCount >= 3){
-      test = 0;
-      mqttClient.publish("433MHzBridge/status", "OFF");
-      sameCodeInRowCount = 0;
-      previousCode = String("");
-      addToDatabase(String(device), String(state), String(hex_code));
-      saveDatabase();
-    }
-  
-  /* addToDatabase("Steckdose1", "on", "000000FFFF0F"); */
-  /* addToDatabase("Steckdose1", "off", "000000FFFFF0"); */
+  }
+  else if(sameCodeInRowCount >= 3){
+    test = 0;
+    mqttClient.publish("433MHzBridge/status", "OFF");
+    sameCodeInRowCount = 0;
+    previousCode = String("");
+    addToDatabase(String(device), String(state), String(hex_code));
+    saveDatabase();
+  }
 }
 
 
-void reconnect() {
+void reconnectMqtt() {
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -139,11 +133,11 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   randomSeed(micros());
-  setup_wifi();
-  //initDatabase();
-  transmit_setup();
-  receive_setup(); 
-  mqttClient.setServer(mqttUrl, 1883);
+  wifiSetup();
+  databaseSetup();
+  transmitSetup();
+  receiveSetup(); 
+  mqttClient.setServer(mqttServerUrl, 1883);
   mqttClient.setCallback(onMqttMessageReceived);
   
 }
@@ -151,7 +145,7 @@ void setup() {
 void loop() {
 
   if (!mqttClient.connected()) {
-    reconnect();
+    reconnectMqtt();
   }
   mqttClient.loop();
   if(test){

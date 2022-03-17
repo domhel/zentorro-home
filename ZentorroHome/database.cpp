@@ -3,7 +3,7 @@
 DynamicJsonDocument database = DynamicJsonDocument(8192);
 eSPIFFS fileSystem = eSPIFFS();
 
-void initDatabase() {
+void databaseSetup() {
   String db_string;
   if (fileSystem.openFromFile(DB_PATH, db_string)) {
     Serial.println("Successfully read file and parsed data: ");
