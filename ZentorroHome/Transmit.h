@@ -2,7 +2,7 @@
 #define TRANSMIT_H
 #include <Arduino.h>
 
-void transmit_setup();
+void transmitSetup();
 void transmit(String name, String state);
 
 

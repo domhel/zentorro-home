@@ -22,7 +22,7 @@ RCSwitch mySwitch2 = RCSwitch();
 
 bool isRecordingCodes = false;
 
-void transmit_setup() {
+void transmitSetup() {
 
   // Transmitter-Pin on NodeMCU
   mySwitch2.enableTransmit(transmitterPin);
