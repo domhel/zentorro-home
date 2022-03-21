@@ -7,8 +7,8 @@
 #include "database.h"
 
 // Update these with values suitable for your network.
-const char* ssid = "FRITZ!Box 7530 SC";
-const char* password = "01178381469567963357";
+const char* ssid = "yourssid";
+const char* password = "yourpassword";
 const char* mqttServerUrl = "broker.mqttdashboard.com";
 
 WiFiClient espClient;
