@@ -7,8 +7,8 @@
 #include "database.h"
 
 // Update these with values suitable for your network.
-const char* ssid = "your ssid";             
-const char* password = "your password";     
+const char* ssid = "yourssid";
+const char* password = "yourpassword";
 const char* mqttServerUrl = "broker.mqttdashboard.com";
 
 WiFiClient espClient;
