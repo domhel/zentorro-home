@@ -1,0 +1,23 @@
+title: Zentorro Home
+views:
+  - icon: mdi:remote
+    id: home
+    title: Home
+    cards:
+      - type: entities
+        entities:
+          - entity: input_text.zentorro_new_device_name
+          - entity: input_text.zentorro_new_device_state
+          - entity: button.start_learning
+        title: Add 433MHz Device
+      - type: entities
+        entities:
+          - entity: input_text.zentorro_control_device_name
+          - entity: input_text.zentorro_control_device_state
+          - entity: button.set_state_2
+        title: 433MHz Manual Control
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - entity: switch.learning_status
+          - entity: button.clear_database

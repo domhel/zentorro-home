@@ -1,15 +1,55 @@
-- id: '1647008246424'
-  alias: ButtonTest
-  description: ''
+- id: '1647031635235'
+  alias: Zentorro Start Learning
+  description: Signals the ESP to start learning over MQTT. Reads two text fields
+    to determine device name and state.
   trigger:
   - platform: state
-    entity_id: button.steckose_flur_on
-  condition: []
+    entity_id: button.start_learning
+  condition:
+  - condition: and
+    conditions:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.zentorro_new_device_name
+        state: ''
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.zentorro_new_device_state
+        state: ''
   action:
   - service: mqtt.publish
     data:
-      topic: 433MHzBridge/pairing
-      retain: true
-      payload: '{device: "{{states(''input_text.text1'')}}", state: "on"}'
+      topic: 433MHzBridge/learn
+      retain: false
+      payload: '{device: "{{states(''input_text.zentorro_new_device_name'' | string)}}",
+        state: "{{states(''input_text.zentorro_new_device_state'' | string)}}"}'
   mode: single
-
+- id: '1647186570344'
+  alias: Zentorro manual control
+  description: Manually control Zentorro Home devices with text fields
+  trigger:
+  - platform: state
+    entity_id: button.set_state_2
+  condition:
+  - condition: and
+    conditions:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.zentorro_control_device_name
+        state: ''
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.zentorro_control_device_state
+        state: ''
+  action:
+  - service: mqtt.publish
+    data:
+      topic: 433MHzBridge/control
+      retain: false
+      payload: '{device: "{{states(''input_text.zentorro_control_device_name'' | string)}}",
+        state: "{{states(''input_text.zentorro_control_device_state'' | string)}}"}'
+  mode: single
