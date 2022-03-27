@@ -1,13 +1,6 @@
-# Configure a default setup of Home Assistant (frontend, api, etc)
-default_config:
-
-# Text to speech
-tts:
-  - platform: google_translate
-
-automation: !include automations.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
+# Paste this in your current configuration.yaml
+# If you have other entities, like a button, you have to paste all elements under the "button" parent.
+# This is because you can only have 1 parent of each type at the top level (button, lovelace, input_text etc.)
 
 lovelace:
   mode: yaml
