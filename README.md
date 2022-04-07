@@ -9,3 +9,7 @@ Software to connect 433MHz-controllable Smart Home devices to Home Assistant
 - RCSwitch
 - ESPMqttClient
 - Effortless-SPIFFS
+
+## Folder structure
+- `ZentorroHome`: Arduino project. This is what you need to upload to your NodeMCU or other ESP
+- `home-assistant-config`: Config files for HA. Some file contents need to be appended/merged, other files can be copied in whole. Read Hackster entry for more detailed instructions.
