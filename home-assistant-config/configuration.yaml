@@ -12,46 +12,43 @@ lovelace:
       icon: mdi:remote
       show_in_sidebar: true
 
-button:
-  - platform: mqtt
-    command_topic: dump
-    name: "Start learning"
-    icon: mdi:play-outline
-  - platform: mqtt
-    command_topic: dump
-    name: "Set state"
-    icon: mdi:power
-  - platform: mqtt
-    command_topic: dump
-    name: "Set state"
-    icon: mdi:power
-  - platform: mqtt
-    command_topic: 433MHzBridge/clear
-    name: "Clear database"
-    icon: mdi:delete-outline
-
-input_text:
-  zentorro_new_device_name:
-    name: Device name
-    mode: text
-    icon: mdi:label-outline
-  zentorro_new_device_state:
-    name: State
-    mode: text
-    icon: mdi:toggle-switch-outline
-  zentorro_control_device_state:
-    name: State
-    mode: text
-    icon: mdi:toggle-switch-outline
-  zentorro_control_device_name:
-    name: Device name
-    mode: text
-    icon: mdi:label-outline
-
-switch:
-  - platform: mqtt
-    command_topic: none
-    state_topic: 433MHzBridge/status
-    payload_on: "ON"
-    payload_off: "OFF"
-    name: "Learning status"
+mqtt:
+  button:
+    - name: "Start learning"
+      command_topic: dump
+      icon: mdi:play-outline
+    - name: "Set state"
+      platform: mqtt
+      command_topic: dump
+      icon: mdi:power
+    - name: "Set state"
+      platform: mqtt
+      command_topic: dump
+      icon: mdi:power
+    - name: "Clear database"
+      platform: mqtt
+      command_topic: 433MHzBridge/clear
+      icon: mdi:delete-outline
+  input_text:
+    zentorro_new_device_name:
+      name: Device name
+      mode: text
+      icon: mdi:label-outline
+    zentorro_new_device_state:
+      name: State
+      mode: text
+      icon: mdi:toggle-switch-outline
+    zentorro_control_device_state:
+      name: State
+      mode: text
+      icon: mdi:toggle-switch-outline
+    zentorro_control_device_name:
+      name: Device name
+      mode: text
+      icon: mdi:label-outline
+  switch:
+    - name: "Learning status"
+      command_topic: none
+      state_topic: 433MHzBridge/status
+      payload_on: "ON"
+      payload_off: "OFF"
